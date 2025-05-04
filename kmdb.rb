@@ -76,13 +76,67 @@
 # Delete existing data, so you'll start fresh each time this script is run.
 # Use `Model.destroy_all` code.
 # TODO!
+Studio.destroy_all
+Movie.destroy_all
+Actor.destroy_all
+Role.destroy_all
 
 # Generate models and tables, according to the domain model.
 # TODO!
 
+#the following was run in the terminal:
+#rails generate model Studio 
+#rails generate model Movie 
+#rails generate model Actor 
+#rails generate model Role 
+#rails db:migrate
+
+
+
 # Insert data into the database that reflects the sample data shown above.
 # Do not use hard-coded foreign key IDs.
 # TODO!
+Studio.create(name: "Warner Bros.")
+wb = Studio.find_by(name: "Warner Bros.")
+
+Movie.create(title: "Batman Begins", year_released: 2005, rated: "PG-13", studio_id: wb.id)
+Movie.create(title: "The Dark Knight", year_released: 2008, rated: "PG-13", studio_id: wb.id)
+Movie.create(title: "The Dark Knight Rises", year_released: 2012, rated: "PG-13", studio_id: wb.id)
+
+begins = Movie.find_by(title: "Batman Begins")
+dark_knight = Movie.find_by(title: "The Dark Knight")
+rises = Movie.find_by(title: "The Dark Knight Rises")
+
+Actor.create(name: "Christian Bale")
+Actor.create(name: "Michael Caine")
+Actor.create(name: "Liam Neeson")
+Actor.create(name: "Katie Holmes")
+Actor.create(name: "Gary Oldman")
+Actor.create(name: "Heath Ledger")
+Actor.create(name: "Aaron Eckhart")
+Actor.create(name: "Maggie Gyllenhaal")
+Actor.create(name: "Tom Hardy")
+Actor.create(name: "Joseph Gordon-Levitt")
+Actor.create(name: "Anne Hathaway")
+
+Role.create(movie_id: begins.id, actor_id: Actor.find_by(name: "Christian Bale").id, character_name: "Bruce Wayne")
+Role.create(movie_id: begins.id, actor_id: Actor.find_by(name: "Michael Caine").id, character_name: "Alfred")
+Role.create(movie_id: begins.id, actor_id: Actor.find_by(name: "Liam Neeson").id, character_name: "Ra's Al Ghul")
+Role.create(movie_id: begins.id, actor_id: Actor.find_by(name: "Katie Holmes").id, character_name: "Rachel Dawes")
+Role.create(movie_id: begins.id, actor_id: Actor.find_by(name: "Gary Oldman").id, character_name: "Commissioner Gordon")
+
+Role.create(movie_id: dark_knight.id, actor_id: Actor.find_by(name: "Christian Bale").id, character_name: "Bruce Wayne")
+Role.create(movie_id: dark_knight.id, actor_id: Actor.find_by(name: "Heath Ledger").id, character_name: "Joker")
+Role.create(movie_id: dark_knight.id, actor_id: Actor.find_by(name: "Aaron Eckhart").id, character_name: "Harvey Dent")
+Role.create(movie_id: dark_knight.id, actor_id: Actor.find_by(name: "Michael Caine").id, character_name: "Alfred")
+Role.create(movie_id: dark_knight.id, actor_id: Actor.find_by(name: "Maggie Gyllenhaal").id, character_name: "Rachel Dawes")
+
+Role.create(movie_id: rises.id, actor_id: Actor.find_by(name: "Christian Bale").id, character_name: "Bruce Wayne")
+Role.create(movie_id: rises.id, actor_id: Actor.find_by(name: "Gary Oldman").id, character_name: "Commissioner Gordon")
+Role.create(movie_id: rises.id, actor_id: Actor.find_by(name: "Tom Hardy").id, character_name: "Bane")
+Role.create(movie_id: rises.id, actor_id: Actor.find_by(name: "Joseph Gordon-Levitt").id, character_name: "John Blake")
+Role.create(movie_id: rises.id, actor_id: Actor.find_by(name: "Anne Hathaway").id, character_name: "Selina Kyle")
+
 
 # Prints a header for the movies output
 puts "Movies"
@@ -91,6 +145,12 @@ puts ""
 
 # Query the movies data and loop through the results to display the movies output.
 # TODO!
+for movie in Movie.all
+    studio = Studio.find_by(id: movie.studio_id)
+    puts "#{movie.title}   #{movie.year_released}   #{movie.rated}   #{studio.name}"
+end
+##Note to professor: we could also use ljust so the output looks more aligned like the sample report
+##However, I did not include since we did not cover ljust in class
 
 # Prints a header for the cast output
 puts ""
@@ -100,3 +160,11 @@ puts ""
 
 # Query the cast data and loop through the results to display the cast output for each movie.
 # TODO!
+for role in Role.all
+    movie = Movie.find_by(id: role.movie_id)
+    actor = Actor.find_by(id: role.actor_id)
+    puts "#{movie.title}   #{actor.name}   #{role.character_name}"
+end
+
+##Note to professor: Similar to above, could use ljust to more neatly format/align the output table,
+##however did not include since it was not covered in class. 
